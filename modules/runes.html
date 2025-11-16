@@ -1,27 +1,36 @@
-<div id="runes-root">
+<div id="runes-root" class="module-page">
 
-  <h2>Runes nordiques — Elder Futhark</h2>
+  <h2 class="module-title">Tirages runiques (Elder Futhark)</h2>
 
   <div class="card">
-    <h3>Choix du tirage</h3>
+
     <p class="subnote">
-      FREE : tirages 1 et 3 runes • ABONNEMENT / À VIE : tirages 1, 3, 5, 9 avec interprétation complète.
+      Pose mentalement une intention ou une question, puis choisis ton tirage.
     </p>
 
-    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
-      <button id="runes-1" class="btn-primary" type="button">1 rune (message immédiat)</button>
-      <button id="runes-3" class="btn-primary" type="button">3 runes (Passé/Présent/Futur)</button>
-      <button id="runes-5" class="btn-primary" type="button">5 runes (Croix runique)</button>
-      <button id="runes-9" class="btn-primary" type="button">9 runes (Chemin de vie)</button>
+    <!-- Question optionnelle -->
+    <label for="runes-question" class="input-label">Question (optionnelle) :</label>
+    <input type="text" id="runes-question" class="input-field"
+      placeholder="Ex : Quelle est l'énergie dominante pour ma prochaine étape ?">
+
+    <!-- Boutons de tirage -->
+    <div class="button-group" style="margin-top:15px;">
+      <button id="btn-runes-1" class="primary-btn">1 rune — Message immédiat</button>
+      <button id="btn-runes-3" class="primary-btn">3 runes — Passé / Présent / Futur</button>
+      <button id="btn-runes-5" class="primary-btn">5 runes — Croix runique</button>
+      <button id="btn-runes-9" class="primary-btn">9 runes — Chemin de vie</button>
     </div>
 
+    <!-- Info accès -->
     <p id="runes-access-hint" class="subnote" style="margin-top:10px;">
-      Niveau : FREE — seules les 1 et 3 runes sont disponibles.
+      Chargement du niveau d’accès…
     </p>
+
   </div>
 
-  <div class="card" id="runes-output">
-    Le tirage apparaîtra ici.
+  <!-- Affichage du tirage -->
+  <div id="runes-output" class="card" style="margin-top:20px;">
+    Le tirage s’affichera ici.
   </div>
 
 </div>
