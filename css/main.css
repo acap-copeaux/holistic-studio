@@ -186,6 +186,20 @@ a:hover {
   box-shadow: var(--shadow-soft);
 }
 
+.theme-btn {
+    background: #0d0f1a;
+    border: 1px solid #3e517a;
+    padding: 6px 14px;
+    border-radius: 6px;
+    color: #9ecbff;
+    cursor: pointer;
+    font-size: 14px;
+    backdrop-filter: blur(4px);
+}
+
+.theme-btn:hover {
+    background: #162033;
+}
 /* ----------------- CONTENU PRINCIPAL ----------------- */
 
 #content {
