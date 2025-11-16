@@ -11,48 +11,51 @@ const HS_APP_CONFIG = {
 };
 
 /* ---------- Thème clair / sombre ---------- */
+/* ===========================
+   GESTION DES THÈMES (fix complet)
+   =========================== */
 
-function hsInitTheme() {
-  const btn = document.getElementById("theme-toggle");
-  if (!btn) return;
-
-  const saved = localStorage.getItem("hs-theme") || "dark";
-  document.body.dataset.theme = saved;
-  btn.textContent = saved === "light" ? "Mode sombre" : "Mode clair";
-
-  btn.addEventListener("click", () => {
-    const current = document.body.dataset.theme || "dark";
-    const next = current === "light" ? "dark" : "light";
-    document.body.dataset.theme = next;
-    btn.textContent = next === "light" ? "Mode sombre" : "Mode clair";
-    localStorage.setItem("hs-theme", next);
-
-    // Activer / désactiver les feuilles de style optionnelles
-    const darkLink = document.getElementById("theme-dark");
-    const lightLink = document.getElementById("theme-light");
-    if (darkLink && lightLink) {
-      if (next === "light") {
-        darkLink.disabled = true;
-        lightLink.disabled = false;
-      } else {
-        darkLink.disabled = false;
-        lightLink.disabled = true;
-      }
+function initTheme() {
+    const toggle = q("#theme-toggle");
+    if (!toggle) {
+        console.warn("Bouton #theme-toggle introuvable.");
+        return;
     }
-  });
 
-  // Appliquer cohérence CSS dès le début
-  const darkLink = document.getElementById("theme-dark");
-  const lightLink = document.getElementById("theme-light");
-  if (darkLink && lightLink) {
-    if (saved === "light") {
-      darkLink.disabled = true;
-      lightLink.disabled = false;
+    // Si aucun thème n'est stocké → sombre par défaut
+    let current = localStorage.getItem("holistic-theme") || "dark";
+
+    applyTheme(current);
+    updateToggleLabel(current);
+
+    toggle.addEventListener("click", () => {
+        current = (current === "light") ? "dark" : "light";
+        localStorage.setItem("holistic-theme", current);
+
+        applyTheme(current);
+        updateToggleLabel(current);
+    });
+}
+
+function applyTheme(theme) {
+    // Active/désactive les feuilles CSS
+    const darkCSS = document.getElementById("theme-dark");
+    const lightCSS = document.getElementById("theme-light");
+
+    if (theme === "light") {
+        lightCSS.disabled = false;
+        darkCSS.disabled = true;
     } else {
-      darkLink.disabled = false;
-      lightLink.disabled = true;
+        lightCSS.disabled = true;
+        darkCSS.disabled = false;
     }
-  }
+}
+
+function updateToggleLabel(theme) {
+    const toggle = q("#theme-toggle");
+    if (!toggle) return;
+
+    toggle.textContent = (theme === "light") ? "Mode sombre" : "Mode clair";
 }
 
 /* ---------- Chargement HTML d’un module ---------- */
