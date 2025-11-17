@@ -1,8 +1,9 @@
 /* ============================================================
    app.js — Kernel principal Holistic Studio
+   - Gestion des thèmes (6 thèmes dans un seul theme.css)
    - Navigation entre modules
-   - Thème clair / sombre
    - Chargement HTML des modules
+   - Initialisation
 ============================================================ */
 
 const HS_APP_CONFIG = {
@@ -10,30 +11,28 @@ const HS_APP_CONFIG = {
   defaultModule: "analysis"
 };
 
-/* ===========================================
-   THÈME CLAIR / SOMBRE — Version stable
-   (UN SEUL fichier CSS + body[data-theme])
-=========================================== */
+/* ============================================================
+   SYSTEME DE THEMES — 6 thèmes dans un seul theme.css
+   Utilise body[data-theme="xxx"]
+============================================================ */
+
 function hsInitTheme() {
-    const toggle = document.querySelector("#theme-toggle");
-    if (!toggle) return;
 
-    // Thème sauvegardé ou sombre par défaut
-    let current = localStorage.getItem("holistic-theme") || "dark";
+    // Thème actuel ou défaut
+    let current = localStorage.getItem("holistic-theme") || "dark-1";
 
-    // Applique le thème au chargement
+    // Appliquer le thème au chargement
     document.body.setAttribute("data-theme", current);
 
-    // Bascule au clic
-    toggle.addEventListener("click", () => {
-        current = current === "dark" ? "light" : "dark";
-        localStorage.setItem("holistic-theme", current);
-        document.body.setAttribute("data-theme", current);
-    });
+    // Expose global pour settings.html
+    window.hsSetTheme = function(newTheme) {
+        localStorage.setItem("holistic-theme", newTheme);
+        document.body.setAttribute("data-theme", newTheme);
+    };
 }
 
 /* ============================================================
-   CHARGEMENT HTML DES MODULES
+   CHARGEMENT HTML D’UN MODULE — via fetch()
 ============================================================ */
 
 async function hsLoadModuleHTML(moduleName) {
@@ -44,20 +43,23 @@ async function hsLoadModuleHTML(moduleName) {
     return await res.text();
   } catch (err) {
     console.error("Erreur de chargement HTML", moduleName, err);
-    return HS_utils.hsErrorBox(`Impossible de charger le module <strong>${moduleName}</strong>.`);
+    return `<div class="card error">Impossible de charger le module <strong>${moduleName}</strong>.</div>`;
   }
 }
 
-/* ---------- Initialisation module JS (optionnel) ---------- */
+/* ============================================================
+   INITIALISATION OPTIONNELLE D’UN MODULE JS
+   (si window.HS_<module>_init existe)
+============================================================ */
+
 function hsCallModuleInit(moduleName, container) {
-  const fnName = `HS_${moduleName}_init`;
-  const initFn = window[fnName];
-  if (typeof initFn === "function") {
-    initFn(container);
-  }
+  const fn = window[`HS_${moduleName}_init`];
+  if (typeof fn === "function") fn(container);
 }
 
-/* ---------- Chargement complet d’un module ---------- */
+/* ============================================================
+   CHARGEMENT COMPLET D’UN MODULE
+============================================================ */
 
 async function hsLoadModule(moduleName) {
   const container = HS_utils.hs$("#module-container");
@@ -68,7 +70,7 @@ async function hsLoadModule(moduleName) {
   loader.style.display = "block";
   container.style.display = "none";
 
-  // Fetch du module
+  // Charger le module
   const html = await hsLoadModuleHTML(moduleName);
   container.innerHTML = html;
 
@@ -76,12 +78,12 @@ async function hsLoadModule(moduleName) {
   loader.style.display = "none";
   container.style.display = "block";
 
-  // Initialisation module
+  // Callback module si JS existant
   hsCallModuleInit(moduleName, container);
 }
 
 /* ============================================================
-   NAVIGATION
+   NAVIGATION — boutons data-module
 ============================================================ */
 
 function hsInitNavigation() {
@@ -97,12 +99,12 @@ function hsInitNavigation() {
       buttons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      // Chargement module
+      // Charge le module
       hsLoadModule(mod);
     });
   });
 
-  // Activation du module par défaut
+  // Active module par défaut
   const first = buttons[0];
   if (first) {
     first.classList.add("active");
@@ -118,4 +120,3 @@ document.addEventListener("DOMContentLoaded", () => {
   hsInitTheme();
   hsInitNavigation();
 });
-                   
