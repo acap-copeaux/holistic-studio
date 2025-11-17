@@ -255,6 +255,46 @@ button.btn {
 
 button.btn:hover { opacity: 0.9; }
 
+/* ===== Boutons de formulaire dans les cartes (Lancer l'analyse, Générer mon totem, etc.) ===== */
+
+.card button:not(.nav-btn):not(.theme-btn) {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  font-family: inherit;
+}
+
+.card button:not(.nav-btn):not(.theme-btn):hover {
+  opacity: 0.9;
+}
+
+/* ===== Checkboxes : correction du width:100% + alignement ===== */
+
+input[type="checkbox"] {
+  width: auto;                 /* annule le 100% */
+  display: inline-block;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  transform: scale(1.1);
+  accent-color: var(--accent); /* couleur de la case = couleur de thème */
+}
+
+/* Au cas où les checkboxes sont dans des labels, on garde l’alignement propre */
+.card label {
+  font-weight: 500;
+}
+
+/* Optionnel : un poil plus d’espace entre chaque ligne de checkbox */
+.card label + label,
+.card div + div {
+  margin-top: 0.3rem;
+}
+
 /* ============================================================
    LOADER HUD PREMIUM
 ============================================================ */
