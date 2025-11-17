@@ -11,6 +11,7 @@ body[data-theme="dark-1"] {
   --bg: #0b0f16;
   --fg: #d9e6ff;
   --accent: #4aa8ff;
+  --accent-rgb: 74,168,255;
   --card: #111822;
 
   --surface: #0d121c;
@@ -24,6 +25,7 @@ body[data-theme="dark-2"] {
   --bg: #0e0a07;
   --fg: #ffe8d9;
   --accent: #ff7f28;
+  --accent-rgb: 255,127,40;
   --card: #1a120d;
 
   --surface: #1a120d;
@@ -37,6 +39,7 @@ body[data-theme="dark-3"] {
   --bg: #05100a;
   --fg: #d4ffe8;
   --accent: #2eff95;
+  --accent-rgb: 46,255,149;
   --card: #0c1a12;
 
   --surface: #0c1a12;
@@ -50,6 +53,7 @@ body[data-theme="light-1"] {
   --bg: #f2f8ff;
   --fg: #1b2e40;
   --accent: #0069ce;
+  --accent-rgb: 0,105,206;
   --card: #ffffff;
 
   --surface: #d9e9ff;
@@ -63,6 +67,7 @@ body[data-theme="light-2"] {
   --bg: #fff5e9;
   --fg: #412e1d;
   --accent: #e06d00;
+  --accent-rgb: 224,109,0;
   --card: #ffffff;
 
   --surface: #ffe9d2;
@@ -76,6 +81,7 @@ body[data-theme="light-3"] {
   --bg: #eafff3;
   --fg: #003d26;
   --accent: #00c86a;
+  --accent-rgb: 0,200,106;
   --card: #ffffff;
 
   --surface: #d7ffea;
@@ -83,7 +89,7 @@ body[data-theme="light-3"] {
 }
 
 /* ============================================================
-   BASE GÉNÉRALE — transitions premium + switch thème
+   BASE GÉNÉRALE — transitions premium
 ============================================================ */
 
 body,
@@ -120,7 +126,7 @@ body.theme-switching {
   }
 }
 
-/* Cartes */
+/* Cartes — base */
 .card {
   background: var(--card);
   border-radius: 18px;
@@ -129,37 +135,14 @@ body.theme-switching {
   position: relative;
 }
 
-.card:hover {
+/* Survol premium des cartes — dépend de data-anim-hover */
+body[data-anim-hover="on"] .card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 28px rgba(0,0,0,0.22);
 }
 
-/* Scan HUD léger sur les cartes au survol */
-.card::before {
-  content: "";
-  position: absolute;
-  top: -20%;
-  bottom: -20%;
-  left: 0;
-  width: 40%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0.12) 50%,
-    transparent 100%
-  );
-  opacity: 0;
-  pointer-events: none;
-}
-
-.card:hover::before {
-  opacity: 1;
-  animation: card-scan 1.2s linear;
-}
-
-@keyframes card-scan {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(260%); }
+body[data-anim-hover="off"] .card:hover {
+  transform: none;
 }
 
 /* Liens */
@@ -170,7 +153,7 @@ a {
 a:hover { opacity: 0.8; }
 
 /* ============================================================
-   NAVIGATION — HUD PREMIUM
+   NAVIGATION — HUD PREMIUM (dépend de data-anim-hud)
 ============================================================ */
 
 .nav-btn {
@@ -184,36 +167,43 @@ a:hover { opacity: 0.8; }
   cursor: pointer;
 }
 
-.nav-btn:hover {
+/* Hover nav selon niveau d’animation HUD */
+body[data-anim-hud="full"] .nav-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 18px rgba(0,0,0,0.15);
   border-color: var(--accent);
 }
 
+body[data-anim-hud="light"] .nav-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  border-color: var(--accent);
+}
+
+body[data-anim-hud="off"] .nav-btn:hover {
+  transform: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Bouton actif — base */
 .nav-btn.active {
-  position: relative;
   background: var(--accent);
   color: white;
+}
+
+/* Intensité du bouton actif selon niveau HUD */
+body[data-anim-hud="full"] .nav-btn.active {
   box-shadow: 0 4px 16px var(--accent);
   transform: translateY(-2px);
 }
 
-.nav-btn.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -3px;
-  height: 2px;
-  width: 100%;
-  background: var(--accent);
-  animation: hud-scan 2s linear infinite;
-  opacity: 0.7;
+body[data-anim-hud="light"] .nav-btn.active {
+  box-shadow: 0 3px 10px rgba(0,0,0,0.28);
 }
 
-@keyframes hud-scan {
-  0% { opacity: 0; width: 0%; }
-  50% { opacity: 1; width: 100%; }
-  100% { opacity: 0; width: 0%; }
+body[data-anim-hud="off"] .nav-btn.active {
+  box-shadow: none;
+  transform: none;
 }
 
 /* ============================================================
@@ -238,6 +228,7 @@ textarea::placeholder {
   opacity: 0.6;
 }
 
+/* Glow de focus (toujours actif, mais doux) */
 input:focus,
 select:focus,
 textarea:focus {
@@ -310,7 +301,54 @@ button.btn:hover { opacity: 0.9; }
 }
 
 /* ============================================================
+   SCAN VERTICAL HUD (container modules)
+   Activé en JS par la classe .hud-scan-effect
+   Intensité selon data-anim-scan
+============================================================ */
+
+#module-container {
+  position: relative;
+}
+
+#module-container.hud-scan-effect::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0) 0%,
+    rgba(var(--accent-rgb), 0.20) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  pointer-events: none;
+  z-index: 50;
+  animation: hud-vertical-scan 1.6s ease-out forwards;
+}
+
+/* Intensité selon réglage */
+body[data-anim-scan="full"] #module-container.hud-scan-effect::before {
+  opacity: 0.85;
+}
+body[data-anim-scan="light"] #module-container.hud-scan-effect::before {
+  opacity: 0.4;
+}
+body[data-anim-scan="off"] #module-container.hud-scan-effect::before {
+  opacity: 0; /* de toute façon JS n'ajoute pas la classe */
+}
+
+@keyframes hud-vertical-scan {
+  0% { transform: translateY(-120%); opacity: 0; }
+  40% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translateY(220%); opacity: 0; }
+}
+
+/* ============================================================
    ANIMATION D'INTRO ARMOR VISION
+   (dépend de data-anim-intro)
 ============================================================ */
 
 #hs-intro-overlay {
@@ -325,6 +363,11 @@ button.btn:hover { opacity: 0.9; }
   pointer-events: auto;
   opacity: 1;
   transition: opacity 0.6s ease;
+}
+
+/* Si intro désactivée, on masque immédiatement */
+body[data-anim-intro="off"] #hs-intro-overlay {
+  display: none !important;
 }
 
 #hs-intro-overlay.hide {
@@ -363,4 +406,4 @@ button.btn:hover { opacity: 0.9; }
 @keyframes intro-spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
+   }
