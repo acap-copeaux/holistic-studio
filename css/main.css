@@ -1,28 +1,200 @@
-/* ============================================================
-   MAIN.CSS — Holistic Studio
-   Structure + UI + sidebar + intro + loader + formulaires
-============================================================ */
-
-/* ------------------------------------------------------------
-   RESET
------------------------------------------------------------- */
-* {
-  margin: 0;
-  padding: 0;
+/* Reset simple */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  font-family: "Inter", sans-serif;
-  background: var(--bg);
-  color: var(--fg);
-  transition: background 0.3s, color 0.3s;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ------------------------------------------------------------
-   INTRO ANIMATION
------------------------------------------------------------- */
+/* HEADER */
+
+#hs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  backdrop-filter: blur(12px);
+  background: linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2));
+  border-bottom: 1px solid var(--border);
+}
+
+.menu-btn {
+  background: transparent;
+  border: 1px solid var(--accent-soft);
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  color: var(--fg);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Logo HUD */
+
+.logo-block {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.hs-logo {
+  width: 52px;
+  height: 52px;
+  color: var(--accent);
+}
+
+.logo-text {
+  font-size: 1.1rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.theme-btn {
+  background: transparent;
+  border-radius: 999px;
+  border: 1px solid var(--accent-soft);
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* NAV TOP */
+
+#hs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem 0.4rem;
+}
+
+.nav-btn {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+}
+
+.nav-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px var(--accent-soft);
+}
+
+/* Sidebar (mobile) */
+
+#hs-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 260px;
+  background: rgba(0,0,0,0.92);
+  border-right: 1px solid var(--border);
+  padding: 1rem;
+  transform: translateX(-100%);
+  transition: transform 0.22s ease-out;
+  z-index: 40;
+}
+
+#hs-sidebar h2 {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+}
+
+#hs-sidebar .nav-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0.35rem;
+}
+
+#hs-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out;
+  z-index: 30;
+}
+
+/* Etat ouvert via classe sur body */
+
+body.sidebar-open #hs-sidebar {
+  transform: translateX(0);
+}
+
+body.sidebar-open #hs-sidebar-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* MAIN */
+
+#hs-main {
+  padding: 0.5rem 1rem 2rem;
+}
+
+/* Cards */
+
+.card {
+  border-radius: 22px;
+  padding: 1.2rem 1.4rem;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.42);
+}
+
+/* Loader HUD */
+
+.hud-loader {
+  display: none;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.hud-ring {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-soft);
+  border-top-color: var(--accent);
+  margin: 0 auto 0.5rem;
+  animation: hs-spin 1.2s linear infinite;
+}
+
+.hud-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin: 0 auto;
+  animation: hs-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes hs-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes hs-pulse {
+  0%,100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.8); opacity: 0.2; }
+}
+
+/* Intro overlay */
+
 #hs-intro-overlay {
   position: fixed;
   inset: 0;
@@ -31,272 +203,106 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-  transition: opacity 0.4s;
-}
-
-#hs-intro-overlay.fade-out {
-  opacity: 0;
-  pointer-events: none;
+  z-index: 100;
+  animation: hs-intro-fade 0.6s ease-out 1.8s forwards;
 }
 
 .intro-ring {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  border: 3px solid rgba(0,150,255,0.4);
-  animation: introRing 2s infinite linear;
+  border: 3px solid rgba(100,160,255,0.32);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-@keyframes introRing {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  animation: hs-intro-spin 1.6s linear infinite;
 }
 
 .intro-core {
-  width: 40px;
-  height: 40px;
-  background: rgba(0,150,255,0.9);
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
-  box-shadow: 0 0 25px rgba(0,150,255,0.9);
+  background: radial-gradient(circle at 30% 20%, #5fb4ff, #001633);
+  box-shadow: 0 0 30px rgba(70,130,255,0.9);
 }
 
 .intro-text {
-  margin-top: 20px;
-  font-size: 1.3rem;
-  letter-spacing: 3px;
-  color: #e6f3ff;
+  margin-top: 1.4rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #f5f8ff;
+  font-size: 0.85rem;
 }
 
-/* ------------------------------------------------------------
-   HEADER
------------------------------------------------------------- */
-#hs-header {
+@keyframes hs-intro-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes hs-intro-fade {
+  to { opacity: 0; visibility: hidden; }
+}
+
+/* Formulaires */
+
+form {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 18px;
-  background: var(--card);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  position: sticky;
-  top: 0;
-  z-index: 500;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.menu-btn {
-  font-size: 1.6rem;
-  background: transparent;
-  border: none;
-  color: var(--fg);
-  cursor: pointer;
+label {
+  font-weight: 500;
+  color: var(--fg-soft);
 }
 
-.logo-container img {
-  height: 40px;
-  filter: drop-shadow(0 0 3px rgba(0,0,0,0.8));
-}
-
-.header-right {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.theme-btn {
-  font-size: 1.3rem;
-  background: var(--card);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 8px;
-  padding: 6px 10px;
-  color: var(--fg);
-  cursor: pointer;
-}
-
-/* ------------------------------------------------------------
-   TOP NAV
------------------------------------------------------------- */
-#hs-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 12px 15px;
-  background: var(--bg);
-}
-
-.nav-btn {
-  padding: 10px 15px;
-  border-radius: 10px;
-  background: var(--card);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--fg);
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: 0.25s;
-}
-
-.nav-btn.active {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 0 18px var(--accent);
-}
-
-.nav-btn:hover {
-  transform: translateY(-2px);
-}
-
-/* ------------------------------------------------------------
-   SIDEBAR
------------------------------------------------------------- */
-#hs-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 260px;
-  height: 100%;
-  background: var(--card);
-  padding: 20px;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
-  z-index: 900;
-  overflow-y: auto;
-}
-
-body.sidebar-open #hs-sidebar {
-  transform: translateX(0);
-}
-
-#hs-sidebar h2 {
-  color: var(--accent);
-  margin-bottom: 20px;
-}
-
-#hs-sidebar-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(2px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-  z-index: 800;
-}
-
-body.sidebar-open #hs-sidebar-backdrop {
-  opacity: 1;
-  pointer-events: all;
-}
-
-/* ------------------------------------------------------------
-   MAIN
------------------------------------------------------------- */
-#hs-main {
-  padding: 20px;
-}
-
-/* ------------------------------------------------------------
-   CARDS
------------------------------------------------------------- */
-.card {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 18px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(255,255,255,0.06);
-}
-
-/* ------------------------------------------------------------
-   LOADER HUD
------------------------------------------------------------- */
-.hud-loader {
-  text-align: center;
-  padding: 40px 0;
-}
-
-.hud-ring {
-  width: 70px;
-  height: 70px;
-  border: 3px solid var(--accent);
-  border-radius: 50%;
-  margin: auto;
-  animation: hudSpin 1.2s linear infinite;
-  opacity: 0.7;
-}
-
-.hud-dot {
-  width: 13px;
-  height: 13px;
-  background: var(--accent);
-  border-radius: 50%;
-  margin: 10px auto 0;
-  animation: hudPulse 1.3s infinite;
-}
-
-@keyframes hudSpin {
-  from { transform: rotate(0); }
-  to   { transform: rotate(360deg); }
-}
-
-@keyframes hudPulse {
-  0%   { transform: scale(1); opacity: 0.7; }
-  50%  { transform: scale(1.5); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.7; }
-}
-
-/* ------------------------------------------------------------
-   FORM INPUTS
------------------------------------------------------------- */
 input[type="text"],
 input[type="email"],
 input[type="date"],
+input[type="time"],
 input[type="number"],
 textarea,
 select {
   width: 100%;
-  padding: 12px;
-  margin-top: 6px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  border: 2px solid var(--accent);
-  background: var(--input-bg);
-  color: var(--input-fg);
-  font-size: 1rem;
+  border-radius: 999px;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.95rem;
   outline: none;
-  transition: border 0.25s, box-shadow 0.25s;
 }
 
-input:focus, textarea:focus {
-  box-shadow: 0 0 12px var(--accent);
-  border-color: var(--accent);
+textarea {
+  border-radius: 18px;
+  min-height: 130px;
+  resize: vertical;
 }
 
-/* ------------------------------------------------------------
-   CHECKBOX ALIGNMENT FIX
------------------------------------------------------------- */
-input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-  accent-color: var(--accent);
-  vertical-align: middle;
-  margin-right: 8px;
-}
-
-/* ------------------------------------------------------------
-   BUTTONS
------------------------------------------------------------- */
-button {
+button,
+input[type="submit"],
+input[type="button"] {
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-/* Submit buttons */
-input[type="submit"], button.action {
-  background: var(--accent);
-  border: none;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 10px;
-  margin-top: 8px;
-  box-shadow: 0 0 10px var(--accent);
+/* Grille de modules / sections */
+
+section + section {
+  margin-top: 1.5rem;
+}
+
+/* Responsive */
+
+@media (min-width: 800px) {
+  #hs-header {
+    padding-inline: 1.8rem;
+  }
+  #hs-main {
+    padding-inline: 1.8rem;
+  }
+  #hs-sidebar {
+    display: none;
+  }
+  #hs-sidebar-backdrop {
+    display: none;
+  }
 }
