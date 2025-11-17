@@ -1,11 +1,10 @@
 /* ============================================================
    app.js — Kernel principal Holistic Studio
-   - Gestion des thèmes (6 thèmes)
-   - Gestion des animations (off / low / medium / full)
-   - Loader + intro Armor Vision
-   - Navigation (top + sidebar)
-   - Swipe latéral
-   - Chargement des modules HTML
+   - Thèmes (6 thèmes)
+   - Animations (off / low / full)
+   - Intro + loader + scanner
+   - Navigation + sidebar + swipe
+   - Chargement modules
 ============================================================ */
 
 const HS_APP_CONFIG = {
@@ -14,70 +13,122 @@ const HS_APP_CONFIG = {
 };
 
 /* ============================================================
-   THEMES
+   THEME & ANIMATIONS
 ============================================================ */
 
-function hsInitTheme() {
-  let theme = localStorage.getItem("holistic-theme") || "dark-2";
-  document.body.setAttribute("data-theme", theme);
+function hsApplyTheme(themeId) {
+  if (!themeId) themeId = "dark-2"; // défaut : sombre orange
+  document.body.setAttribute("data-theme", themeId);
+  localStorage.setItem("holistic-theme", themeId);
+}
 
-  window.hsSetTheme = function (newTheme) {
-    if (!newTheme) return;
-    document.body.setAttribute("data-theme", newTheme);
-    localStorage.setItem("holistic-theme", newTheme);
-  };
+function hsApplyAnimLevel(level) {
+  const valid = ["off", "low", "full"];
+  if (!valid.includes(level)) level = "off";
 
-  window.hsToggleDarkLight = function () {
-    let current = localStorage.getItem("holistic-theme") || "dark-2";
-    let [mode, variant] = current.split("-");
-    if (!variant) variant = "2";
-    const newMode = mode === "dark" ? "light" : "dark";
-    const newTheme = `${newMode}-${variant}`;
-    document.body.setAttribute("data-theme", newTheme);
-    localStorage.setItem("holistic-theme", newTheme);
-  };
+  document.body.classList.remove("animations-off", "animations-low", "animations-full");
+  document.body.classList.add("animations-" + level);
+  localStorage.setItem("holistic-anim-level", level);
+}
+
+/* Exposées pour settings.html */
+window.hsSetTheme = function (themeId) {
+  hsApplyTheme(themeId);
+};
+window.hsGetTheme = function () {
+  return document.body.getAttribute("data-theme") || "dark-2";
+};
+
+window.hsSetAnimations = function (level) {
+  hsApplyAnimLevel(level);
+};
+window.hsGetAnimations = function () {
+  if (document.body.classList.contains("animations-full")) return "full";
+  if (document.body.classList.contains("animations-low")) return "low";
+  return "off";
+};
+
+/* Bascule rapide clair / sombre (bouton lune) */
+window.hsToggleDarkLight = function () {
+  let current = window.hsGetTheme();
+  const parts = current.split("-");
+  let mode = parts[0];
+  const variant = parts[1] || "2";
+
+  mode = mode === "dark" ? "light" : "dark";
+  const next = `${mode}-${variant}`;
+  hsApplyTheme(next);
+};
+
+/* Initialisation thème + animations à partir du localStorage */
+function hsInitThemeAndAnim() {
+  const savedTheme = localStorage.getItem("holistic-theme") || "dark-2";
+  const savedAnim = localStorage.getItem("holistic-anim-level") || "off";
+  hsApplyTheme(savedTheme);
+  hsApplyAnimLevel(savedAnim);
 }
 
 /* ============================================================
-   ANIMATIONS (Armor Vision)
-============================================================ */
-
-function hsInitAnim() {
-  let level = localStorage.getItem("hs-anim") || "medium";
-  document.body.setAttribute("data-anim", level);
-
-  window.hsSetAnim = function (newLevel) {
-    if (!newLevel) return;
-    document.body.setAttribute("data-anim", newLevel);
-    localStorage.setItem("hs-anim", newLevel);
-  };
-}
-
-/* ============================================================
-   INTRO / LOADER D'OUVERTURE
+   INTRO OVERLAY
 ============================================================ */
 
 function hsInitIntro() {
   const intro = document.getElementById("hs-intro-overlay");
   if (!intro) return;
 
-  const hideIntro = () => {
-    if (intro.classList.contains("hs-intro-hidden")) return;
-    intro.classList.add("hs-intro-hidden");
-    setTimeout(() => {
-      intro.style.display = "none";
-    }, 550);
-  };
+  // Remplace le contenu existant par le logo + texte
+  intro.innerHTML = `
+    <img src="img/bear-totem.png" alt="Holistic Studio" class="intro-logo">
+    <div class="intro-text">HOLISTIC STUDIO</div>
+  `;
 
-  // clic pour passer
-  intro.addEventListener("click", hideIntro);
-
-  // disparition auto après 2,2 s
-  setTimeout(hideIntro, 2200);
+  // Laisse l'animation CSS gérer le fade-out (voir theme.css)
+  setTimeout(() => {
+    intro.style.display = "none";
+  }, 3400); // ~2s d'anim + fade
 }
 
 /* ============================================================
-   LOADER / MODULES
+   LOADER + SCANNER
+============================================================ */
+
+function hsShowLoader() {
+  const loader = HS_utils.hs$("#hs-loader");
+  const container = HS_utils.hs$("#module-container");
+  if (!loader || !container) return;
+
+  loader.style.display = "block";
+  container.style.display = "none";
+}
+
+function hsHideLoader() {
+  const loader = HS_utils.hs$("#hs-loader");
+  const container = HS_utils.hs$("#module-container");
+  if (!loader || !container) return;
+
+  loader.style.display = "none";
+  container.style.display = "block";
+}
+
+/* Injecte / retire la barre scanner */
+function hsAttachScanner() {
+  const container = HS_utils.hs$("#module-container");
+  if (!container) return;
+
+  // Nettoyage ancienne barre
+  const old = container.querySelector(".scanner-line");
+  if (old) old.remove();
+
+  // Animations désactivées => rien
+  if (document.body.classList.contains("animations-off")) return;
+
+  const line = document.createElement("div");
+  line.className = "scanner-line";
+  container.appendChild(line);
+}
+
+/* ============================================================
+   CHARGEMENT HTML D’UN MODULE
 ============================================================ */
 
 async function hsLoadModuleHTML(moduleName) {
@@ -87,69 +138,65 @@ async function hsLoadModuleHTML(moduleName) {
     if (!res.ok) throw new Error("HTTP " + res.status);
     return await res.text();
   } catch (err) {
-    console.error("Erreur de chargement du module", moduleName, err);
-    return window.HS_utils
-      ? window.HS_utils.hsErrorBox(
-          `Impossible de charger le module <strong>${moduleName}</strong>.`
-        )
-      : `<div class="card error-card">Erreur de chargement du module ${moduleName}.</div>`;
+    console.error("Erreur de chargement module", moduleName, err);
+    return HS_utils.hsErrorBox(`Impossible de charger <strong>${moduleName}</strong>.`);
   }
 }
 
+/* Callback JS optionnel : window.HS_<module>_init */
 function hsCallModuleInit(moduleName, container) {
   const fn = window[`HS_${moduleName}_init`];
-  if (typeof fn === "function") fn(container);
+  if (typeof fn === "function") {
+    try {
+      fn(container);
+    } catch (e) {
+      console.error("Erreur dans HS_" + moduleName + "_init", e);
+    }
+  }
 }
 
+/* Chargement complet d’un module */
 async function hsLoadModule(moduleName) {
   const container = HS_utils.hs$("#module-container");
-  const loader = HS_utils.hs$("#hs-loader");
-  if (!container || !loader) return;
+  if (!container) return;
 
-  loader.style.display = "flex";
-  container.style.display = "none";
+  hsShowLoader();
 
   const html = await hsLoadModuleHTML(moduleName);
   container.innerHTML = html;
 
-  loader.style.display = "none";
-  container.style.display = "block";
-
+  hsHideLoader();
+  hsAttachScanner();
   hsCallModuleInit(moduleName, container);
 }
 
 /* ============================================================
-   NAVIGATION (top + sidebar)
+   NAVIGATION
 ============================================================ */
 
 function hsInitNavigation() {
   const buttons = HS_utils.hs$all("[data-module]");
   if (!buttons.length) return;
 
-  function activateButtons(moduleName) {
-    buttons.forEach((btn) => {
-      if (btn.dataset.module === moduleName) {
-        btn.classList.add("active");
-      } else {
-        btn.classList.remove("active");
-      }
-    });
-  }
-
-  buttons.forEach((btn) => {
+  buttons.forEach(btn => {
     btn.addEventListener("click", () => {
       const mod = btn.dataset.module;
       if (!mod) return;
-      activateButtons(mod);
+
+      // Surbrillance globale
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
       hsLoadModule(mod);
-      hsCloseSidebar();
     });
   });
 
-  // module par défaut
-  const def = HS_APP_CONFIG.defaultModule;
-  activateButtons(def);
-  hsLoadModule(def);
+  // Module par défaut
+  const first = HS_utils.hs$('[data-module="' + HS_APP_CONFIG.defaultModule + '"]') || buttons[0];
+  if (first) {
+    first.classList.add("active");
+    hsLoadModule(HS_APP_CONFIG.defaultModule);
+  }
 }
 
 /* ============================================================
@@ -157,86 +204,96 @@ function hsInitNavigation() {
 ============================================================ */
 
 function hsOpenSidebar() {
-  document.body.classList.add("sidebar-open");
+  const sidebar = document.getElementById("hs-sidebar");
+  const backdrop = document.getElementById("hs-sidebar-backdrop");
+  if (!sidebar || !backdrop) return;
+  sidebar.classList.add("open");
+  backdrop.classList.add("visible");
 }
 
 function hsCloseSidebar() {
-  document.body.classList.remove("sidebar-open");
+  const sidebar = document.getElementById("hs-sidebar");
+  const backdrop = document.getElementById("hs-sidebar-backdrop");
+  if (!sidebar || !backdrop) return;
+  sidebar.classList.remove("open");
+  backdrop.classList.remove("visible");
 }
 
-function hsToggleSidebar() {
-  document.body.classList.toggle("sidebar-open");
-}
+window.hsToggleSidebar = function () {
+  const sidebar = document.getElementById("hs-sidebar");
+  if (!sidebar) return;
+  if (sidebar.classList.contains("open")) hsCloseSidebar();
+  else hsOpenSidebar();
+};
 
-function hsInitSidebar() {
-  const menuBtn = HS_utils.hs$("#hs-menu-toggle");
-  const backdrop = HS_utils.hs$("#hs-sidebar-backdrop");
+function hsInitSidebarSwipe() {
+  const zone = document.createElement("div");
+  zone.className = "sidebar-swipe-zone";
+  document.body.appendChild(zone);
 
-  if (menuBtn) menuBtn.addEventListener("click", hsToggleSidebar);
-  if (backdrop) backdrop.addEventListener("click", hsCloseSidebar);
+  let startX = null;
+  let tracking = false;
 
-  // swipe
-  let startX = 0;
-  let currentX = 0;
-  let touching = false;
+  zone.addEventListener("touchstart", (e) => {
+    if (!e.touches || !e.touches.length) return;
+    startX = e.touches[0].clientX;
+    tracking = true;
+  });
 
-  const THRESHOLD = 50; // px
-  const EDGE = 40;      // zone de départ près du bord
+  zone.addEventListener("touchmove", (e) => {
+    if (!tracking || startX == null) return;
+    const x = e.touches[0].clientX;
+    const delta = x - startX;
+    if (delta > 40) {
+      tracking = false;
+      hsOpenSidebar();
+    }
+  });
 
-  document.addEventListener(
-    "touchstart",
-    (e) => {
-      if (e.touches.length !== 1) return;
-      const touch = e.touches[0];
-      startX = currentX = touch.clientX;
-      touching = true;
-    },
-    { passive: true }
-  );
+  zone.addEventListener("touchend", () => {
+    tracking = false;
+    startX = null;
+  });
 
-  document.addEventListener(
-    "touchmove",
-    (e) => {
-      if (!touching) return;
-      const touch = e.touches[0];
-      currentX = touch.clientX;
-    },
-    { passive: true }
-  );
-
-  document.addEventListener(
-    "touchend",
-    () => {
-      if (!touching) return;
-      const dx = currentX - startX;
-      const sidebarOpen = document.body.classList.contains("sidebar-open");
-
-      if (!sidebarOpen) {
-        // ouverture : partir du bord gauche
-        if (startX < EDGE && dx > THRESHOLD) {
-          hsOpenSidebar();
-        }
-      } else {
-        // fermeture : swipe vers la gauche
-        if (dx < -THRESHOLD) {
-          hsCloseSidebar();
-        }
+  // Swipe pour fermer depuis l'intérieur du sidebar
+  const sidebar = document.getElementById("hs-sidebar");
+  if (sidebar) {
+    let closeStartX = null;
+    sidebar.addEventListener("touchstart", (e) => {
+      if (!e.touches || !e.touches.length) return;
+      closeStartX = e.touches[0].clientX;
+    });
+    sidebar.addEventListener("touchmove", (e) => {
+      if (closeStartX == null) return;
+      const x = e.touches[0].clientX;
+      const delta = x - closeStartX;
+      if (delta < -40) {
+        closeStartX = null;
+        hsCloseSidebar();
       }
+    });
+    sidebar.addEventListener("touchend", () => {
+      closeStartX = null;
+    });
+  }
 
-      touching = false;
-    },
-    { passive: true }
-  );
+  // Backdrop + ESC pour fermer
+  const backdrop = document.getElementById("hs-sidebar-backdrop");
+  if (backdrop) {
+    backdrop.addEventListener("click", hsCloseSidebar);
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") hsCloseSidebar();
+  });
 }
 
 /* ============================================================
-   BOOT
+   BOOTSTRAP
 ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-  hsInitTheme();
-  hsInitAnim();
+  hsInitThemeAndAnim();
   hsInitIntro();
-  hsInitSidebar();
   hsInitNavigation();
+  hsInitSidebarSwipe();
 });
