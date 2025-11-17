@@ -1,147 +1,302 @@
 /* ============================================================
-   LAYOUT GLOBAL HOLISTIC STUDIO
+   MAIN.CSS — Holistic Studio
+   Structure + UI + sidebar + intro + loader + formulaires
 ============================================================ */
 
-body {
+/* ------------------------------------------------------------
+   RESET
+------------------------------------------------------------ */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-#hs-header {
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ------------------------------------------------------------
+   INTRO ANIMATION
+------------------------------------------------------------ */
+#hs-intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.4s;
+}
+
+#hs-intro-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-ring {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid rgba(0,150,255,0.4);
+  animation: introRing 2s infinite linear;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
+  justify-content: center;
 }
 
-.logo {
-  font-size: 1.4rem;
-  margin: 0;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+@keyframes introRing {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.intro-core {
+  width: 40px;
+  height: 40px;
+  background: rgba(0,150,255,0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 25px rgba(0,150,255,0.9);
+}
+
+.intro-text {
+  margin-top: 20px;
+  font-size: 1.3rem;
+  letter-spacing: 3px;
+  color: #e6f3ff;
+}
+
+/* ------------------------------------------------------------
+   HEADER
+------------------------------------------------------------ */
+#hs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: var(--card);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+}
+
+.menu-btn {
+  font-size: 1.6rem;
+  background: transparent;
+  border: none;
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.logo-container img {
+  height: 40px;
+  filter: drop-shadow(0 0 3px rgba(0,0,0,0.8));
+}
+
+.header-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .theme-btn {
-  border-radius: 999px;
-  border: 1px solid transparent;
-  padding: 8px 12px;
-  font-size: 1rem;
+  font-size: 1.3rem;
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: var(--fg);
   cursor: pointer;
-  background: transparent;
 }
 
-/* NAVBAR */
-
+/* ------------------------------------------------------------
+   TOP NAV
+------------------------------------------------------------ */
 #hs-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 8px 18px 12px;
+  gap: 10px;
+  padding: 12px 15px;
+  background: var(--bg);
 }
 
-/* MAIN LAYOUT */
-
-#hs-main {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 10px 18px 40px;
-  box-sizing: border-box;
-}
-
-/* MODULE CONTAINER */
-
-#module-container {
-  margin-top: 14px;
-}
-
-/* RESPONSIVE */
-
-@media (max-width: 700px) {
-  #hs-header {
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .logo {
-    font-size: 1.1rem;
-  }
-
-  #hs-nav {
-    gap: 6px;
-  }
-
-  .nav-btn {
-    padding: 8px 10px;
-    font-size: 0.85rem;
-  }
-}
-
-/* ============================
-   MENU LATERAL MOBILE
-============================ */
-
-.menu-btn {
-  background: transparent;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  padding: 6px 10px;
-  font-size: 1.1rem;
+.nav-btn {
+  padding: 10px 15px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--fg);
   cursor: pointer;
+  font-size: 0.95rem;
+  transition: 0.25s;
 }
 
-/* Backdrop sombre derrière le menu */
+.nav-btn.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 18px var(--accent);
+}
+
+.nav-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------
+   SIDEBAR
+------------------------------------------------------------ */
+#hs-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100%;
+  background: var(--card);
+  padding: 20px;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 900;
+  overflow-y: auto;
+}
+
+body.sidebar-open #hs-sidebar {
+  transform: translateX(0);
+}
+
+#hs-sidebar h2 {
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
 #hs-sidebar-backdrop {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
-  z-index: 1500;
+  transition: opacity 0.3s;
+  z-index: 800;
 }
 
 body.sidebar-open #hs-sidebar-backdrop {
   opacity: 1;
-  pointer-events: auto;
+  pointer-events: all;
 }
 
-/* Desktop : nav classique */
-#hs-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 8px 18px 12px;
+/* ------------------------------------------------------------
+   MAIN
+------------------------------------------------------------ */
+#hs-main {
+  padding: 20px;
 }
 
-/* Mobile : nav transformée en menu latéral */
-@media (max-width: 800px) {
+/* ------------------------------------------------------------
+   CARDS
+------------------------------------------------------------ */
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
 
-  #hs-main {
-    padding-top: 12px;
-  }
+/* ------------------------------------------------------------
+   LOADER HUD
+------------------------------------------------------------ */
+.hud-loader {
+  text-align: center;
+  padding: 40px 0;
+}
 
-  #hs-nav {
-    position: fixed;
-    left: -260px;
-    top: 0;
-    width: 240px;
-    height: 100%;
-    background: var(--bg);
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 80px 16px 16px;
-    gap: 10px;
-    box-shadow: 8px 0 18px rgba(0,0,0,0.5);
-    transition: left 0.28s ease;
-    z-index: 2000;
-  }
+.hud-ring {
+  width: 70px;
+  height: 70px;
+  border: 3px solid var(--accent);
+  border-radius: 50%;
+  margin: auto;
+  animation: hudSpin 1.2s linear infinite;
+  opacity: 0.7;
+}
 
-  body.sidebar-open #hs-nav {
-    left: 0;
-  }
+.hud-dot {
+  width: 13px;
+  height: 13px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin: 10px auto 0;
+  animation: hudPulse 1.3s infinite;
+}
 
-  /* On évite de réduire la nav sur desktop, seulement mobile */
-  .nav-btn {
-    width: 100%;
-    text-align: left;
-  }
+@keyframes hudSpin {
+  from { transform: rotate(0); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes hudPulse {
+  0%   { transform: scale(1); opacity: 0.7; }
+  50%  { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.7; }
+}
+
+/* ------------------------------------------------------------
+   FORM INPUTS
+------------------------------------------------------------ */
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 2px solid var(--accent);
+  background: var(--input-bg);
+  color: var(--input-fg);
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.25s, box-shadow 0.25s;
+}
+
+input:focus, textarea:focus {
+  box-shadow: 0 0 12px var(--accent);
+  border-color: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   CHECKBOX ALIGNMENT FIX
+------------------------------------------------------------ */
+input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--accent);
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* ------------------------------------------------------------
+   BUTTONS
+------------------------------------------------------------ */
+button {
+  cursor: pointer;
+}
+
+/* Submit buttons */
+input[type="submit"], button.action {
+  background: var(--accent);
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
+  margin-top: 8px;
+  box-shadow: 0 0 10px var(--accent);
 }
