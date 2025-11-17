@@ -4,6 +4,7 @@
    - Bascule rapide clair/sombre
    - Navigation
    - Chargement modules + loader premium
+   - Animation d'intro Armor Vision
 ============================================================ */
 
 const HS_APP_CONFIG = {
@@ -28,6 +29,13 @@ function hsInitTheme() {
         const [mode, variant] = current.split("-");
         const newMode = mode === "dark" ? "light" : "dark";
         const newTheme = `${newMode}-${variant}`;
+
+        // petit effet de fondu
+        document.body.classList.add("theme-switching");
+        setTimeout(() => {
+          document.body.classList.remove("theme-switching");
+        }, 400);
+
         localStorage.setItem("holistic-theme", newTheme);
         document.body.setAttribute("data-theme", newTheme);
     };
@@ -62,13 +70,17 @@ async function hsLoadModule(moduleName) {
   const container = HS_utils.hs$("#module-container");
   const loader = HS_utils.hs$("#hs-loader");
 
-  loader.style.display = "block";
+  if (loader) {
+    loader.style.display = "block";
+  }
   container.style.display = "none";
 
   const html = await hsLoadModuleHTML(moduleName);
   container.innerHTML = html;
 
-  loader.style.display = "none";
+  if (loader) {
+    loader.style.display = "none";
+  }
   container.style.display = "block";
 
   hsCallModuleInit(moduleName, container);
@@ -98,9 +110,29 @@ function hsInitNavigation() {
 }
 
 /* ============================================================
+   INTRO ARMOR VISION
+============================================================ */
+function hsInitIntro() {
+  const intro = document.getElementById("hs-intro-overlay");
+  if (!intro) return;
+
+  // on laisse l'intro visible un court instant puis on la fade out
+  setTimeout(() => {
+    intro.classList.add("hide");
+  }, 1200);
+
+  setTimeout(() => {
+    if (intro && intro.parentNode) {
+      intro.parentNode.removeChild(intro);
+    }
+  }, 2100);
+}
+
+/* ============================================================
    BOOT
 ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   hsInitTheme();
   hsInitNavigation();
+  hsInitIntro();
 });
