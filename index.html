@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Holistic Studio – Armor Vision</title>
 
-  <!-- STYLES PRINCIPAUX -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/theme.css">
 
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0b0f16">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+
 </head>
 
-<body data-theme="dark-1">
+<body>
 
   <!-- INTRO -->
   <div id="hs-intro-overlay">
@@ -24,22 +24,40 @@
     <div class="intro-text">HOLISTIC STUDIO</div>
   </div>
 
-  <!-- BACKDROP pour menu latéral -->
+  <!-- SIDEBAR BACKDROP -->
   <div id="hs-sidebar-backdrop"></div>
 
   <!-- HEADER -->
   <header id="hs-header">
-      <button id="hs-menu-toggle" class="menu-btn" onclick="hsToggleSidebar()">☰</button>
+    <button id="hs-menu-toggle" class="menu-btn" onclick="hsToggleSidebar()">☰</button>
 
-      <h1 class="logo">Holistic Studio</h1>
+    <div class="logo-container">
+      <img id="hs-logo" src="assets/logo-holistic.svg" alt="Holistic Logo" />
+    </div>
 
-      <div style="display:flex; gap:10px; align-items:center;">
-        <button data-module="settings" class="nav-btn nav-icon">⚙️</button>
-        <button id="theme-toggle" class="theme-btn" onclick="hsToggleDarkLight()">🌗</button>
-      </div>
+    <div class="header-right">
+      <button data-module="settings" class="nav-btn nav-icon">⚙️</button>
+      <button id="theme-toggle" class="theme-btn" onclick="hsToggleDarkLight()">🌗</button>
+    </div>
   </header>
 
-  <!-- NAVIGATION -->
+  <!-- SIDEBAR -->
+  <aside id="hs-sidebar">
+    <h2>Navigation</h2>
+    <button data-module="analysis" class="nav-btn">Analyse</button>
+    <button data-module="runes" class="nav-btn">Runes</button>
+    <button data-module="premium" class="nav-btn">Premium</button>
+    <button data-module="yijing" class="nav-btn">Yijing</button>
+    <button data-module="mtc" class="nav-btn">MTC</button>
+    <button data-module="remedies" class="nav-btn">Remèdes</button>
+    <button data-module="totem" class="nav-btn">Totem</button>
+    <button data-module="pricing" class="nav-btn">Tarifs</button>
+    <button data-module="contact" class="nav-btn">Contact</button>
+    <button data-module="legal" class="nav-btn">Légal</button>
+    <button data-module="settings" class="nav-btn">Paramètres</button>
+  </aside>
+
+  <!-- TOP NAV (version desktop) -->
   <nav id="hs-nav">
     <button data-module="analysis" class="nav-btn">Analyse</button>
     <button data-module="runes" class="nav-btn">Runes</button>
@@ -51,19 +69,16 @@
     <button data-module="pricing" class="nav-btn">Tarifs</button>
     <button data-module="contact" class="nav-btn">Contact</button>
     <button data-module="legal" class="nav-btn">Légal</button>
-    <button data-module="settings" class="nav-btn">⚙️ Paramètres</button>
+    <button data-module="settings" class="nav-btn">⚙️</button>
   </nav>
 
-  <!-- MAIN -->
   <main id="hs-main">
 
-    <!-- Loader -->
     <div id="hs-loader" class="hud-loader">
       <div class="hud-ring"></div>
       <div class="hud-dot"></div>
-    </div> 
-    
-    <!-- Module dynamique -->
+    </div>
+
     <div id="module-container"></div>
 
   </main>
