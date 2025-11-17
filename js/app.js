@@ -160,6 +160,62 @@ async function hsLoadModule(moduleName) {
 }
 
 /* ============================================================
+   MENU LATERAL (sidebar) + gestes tactiles
+============================================================ */
+
+function hsToggleSidebar(force) {
+  const body = document.body;
+  const isOpen = body.classList.contains("sidebar-open");
+  const shouldOpen = (typeof force === "boolean") ? force : !isOpen;
+
+  if (shouldOpen) {
+    body.classList.add("sidebar-open");
+  } else {
+    body.classList.remove("sidebar-open");
+  }
+}
+
+function hsInitSidebarGestures() {
+  const backdrop = document.getElementById("hs-sidebar-backdrop");
+  if (backdrop) {
+    backdrop.addEventListener("click", () => hsToggleSidebar(false));
+  }
+
+  let startX = null;
+
+  window.addEventListener("touchstart", (e) => {
+    const touch = e.touches[0];
+    const body = document.body;
+
+    // ouverture par slide depuis le bord gauche
+    if (!body.classList.contains("sidebar-open") && touch.clientX < 20) {
+      startX = touch.clientX;
+    }
+    // fermeture par slide depuis n'importe où quand le menu est ouvert
+    else if (body.classList.contains("sidebar-open")) {
+      startX = touch.clientX;
+    }
+  });
+
+  window.addEventListener("touchend", (e) => {
+    if (startX === null) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - startX;
+    const body = document.body;
+
+    if (!body.classList.contains("sidebar-open") && startX < 30 && dx > 60) {
+      // slide droite : ouvrir
+      hsToggleSidebar(true);
+    } else if (body.classList.contains("sidebar-open") && dx < -60) {
+      // slide gauche : fermer
+      hsToggleSidebar(false);
+    }
+
+    startX = null;
+  });
+}
+
+/* ============================================================
    NAVIGATION
 ============================================================ */
 function hsInitNavigation() {
