@@ -19,7 +19,9 @@
 
   <!-- INTRO -->
   <div id="hs-intro-overlay">
-    <div class="intro-ring"><div class="intro-core"></div></div>
+    <div class="intro-ring">
+      <div class="intro-core"></div>
+    </div>
     <div class="intro-text">HOLISTIC STUDIO</div>
   </div>
 
@@ -31,19 +33,19 @@
   ============================ -->
   <header id="hs-header">
 
-    <!-- MENU (mobile) -->
+    <!-- MENU MOBILE -->
     <button id="hs-menu-toggle" class="menu-btn" onclick="hsToggleSidebar()">☰</button>
 
-    <!-- LOGO HUD (SVG inline dynamique) -->
+    <!-- LOGO HUD inline (glow/pulse, couleur = thème) -->
     <div class="logo-block">
-      <svg viewBox="0 0 200 200" class="hs-logo" aria-hidden="true">
+      <svg viewBox="0 0 260 260" class="hs-logo" aria-hidden="true">
         <defs>
           <clipPath id="hsLogoClip">
-            <circle cx="100" cy="100" r="80" />
+            <circle cx="130" cy="130" r="115" />
           </clipPath>
 
           <filter id="hsLogoGlow">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
             <feMerge>
               <feMergeNode in="blur"/>
               <feMergeNode in="SourceGraphic"/>
@@ -51,30 +53,36 @@
           </filter>
         </defs>
 
-        <!-- Image Ours -->
-        <image href="img/bear-totem.png" x="20" y="20" width="160" height="160"
-               clip-path="url(#hsLogoClip)" />
+        <!-- TON OURS (img/bear-totem.png) -->
+        <image href="img/bear-totem.png"
+               x="15" y="15"
+               width="230" height="230"
+               clip-path="url(#hsLogoClip)"
+               preserveAspectRatio="xMidYMid slice" />
 
         <!-- Anneau animé -->
-        <circle cx="100" cy="100" r="84"
-                fill="none"
+        <circle cx="130" cy="130" r="118"
                 stroke="currentColor"
                 stroke-width="3"
-                stroke-linecap="round"
-                stroke-dasharray="12 10"
+                stroke-dasharray="18 10"
+                fill="none"
                 filter="url(#hsLogoGlow)">
-          <animateTransform attributeName="transform" type="rotate"
-                            from="0 100 100" to="360 100 100"
-                            dur="4s" repeatCount="indefinite" />
+          <animateTransform attributeName="transform"
+                            type="rotate"
+                            from="0 130 130" to="360 130 130"
+                            dur="5s"
+                            repeatCount="indefinite" />
         </circle>
 
-        <!-- Point pulsant -->
-        <circle cx="100" cy="172" r="6"
+        <!-- Point bas pulsant -->
+        <circle cx="130" cy="245" r="7"
                 fill="currentColor"
                 filter="url(#hsLogoGlow)">
-          <animateTransform attributeName="transform" type="scale"
-                            values="1;1.4;1"
-                            dur="1.6s" repeatCount="indefinite" />
+          <animateTransform attributeName="transform"
+                            type="scale"
+                            values="1;1.6;1"
+                            dur="1.6s"
+                            repeatCount="indefinite" />
         </circle>
       </svg>
 
@@ -86,11 +94,10 @@
       <button data-module="settings" class="nav-btn nav-icon">⚙️</button>
       <button id="theme-toggle" class="theme-btn" onclick="hsToggleDarkLight()">🌗</button>
     </div>
-
   </header>
 
   <!-- ===========================
-          SIDEBAR
+          SIDEBAR (mobile)
   ============================ -->
   <aside id="hs-sidebar">
     <h2>Navigation</h2>
@@ -108,7 +115,7 @@
   </aside>
 
   <!-- ===========================
-          NAV (DESKTOP)
+          NAV TOP (desktop)
   ============================ -->
   <nav id="hs-nav">
     <button data-module="analysis" class="nav-btn">Analyse</button>
@@ -125,7 +132,7 @@
   </nav>
 
   <!-- ===========================
-          MAIN
+          CONTENU
   ============================ -->
   <main id="hs-main">
 
@@ -135,7 +142,7 @@
       <div class="hud-dot"></div>
     </div>
 
-    <!-- MODULE CONTAINER -->
+    <!-- MODULES -->
     <div id="module-container"></div>
 
   </main>
@@ -145,5 +152,12 @@
   <script src="js/premium.js"></script>
   <script src="js/runes.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- PWA : Service worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
+  </script>
 </body>
 </html>
