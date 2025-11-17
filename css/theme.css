@@ -1,7 +1,7 @@
 /* ============================================================
    THEMES HOLISTIC STUDIO — un seul fichier
    3 thèmes sombres + 3 thèmes clairs
-   S'appliquent via body[data-theme="xxx"]
+   Basé sur body[data-theme="xxx"]
 ============================================================ */
 
 /* ============================================================
@@ -12,6 +12,9 @@ body[data-theme="dark-1"] {
   --fg: #d9e6ff;
   --accent: #4aa8ff;
   --card: #111822;
+
+  --surface: #0d121c;
+  --surface-fg: #d9e6ff;
 }
 
 /* ============================================================
@@ -22,6 +25,9 @@ body[data-theme="dark-2"] {
   --fg: #ffe8d9;
   --accent: #ff7f28;
   --card: #1a120d;
+
+  --surface: #1a120d;
+  --surface-fg: #ffe8d9;
 }
 
 /* ============================================================
@@ -32,6 +38,9 @@ body[data-theme="dark-3"] {
   --fg: #d4ffe8;
   --accent: #2eff95;
   --card: #0c1a12;
+
+  --surface: #0c1a12;
+  --surface-fg: #d4ffe8;
 }
 
 /* ============================================================
@@ -42,6 +51,9 @@ body[data-theme="light-1"] {
   --fg: #1b2e40;
   --accent: #0069ce;
   --card: #ffffff;
+
+  --surface: #d9e9ff;   /* bleu clair */
+  --surface-fg: #1a2c3a;
 }
 
 /* ============================================================
@@ -52,6 +64,9 @@ body[data-theme="light-2"] {
   --fg: #412e1d;
   --accent: #e06d00;
   --card: #ffffff;
+
+  --surface: #ffe9d2;      /* orange pâle */
+  --surface-fg: #3a2e22;
 }
 
 /* ============================================================
@@ -62,25 +77,116 @@ body[data-theme="light-3"] {
   --fg: #003d26;
   --accent: #00c86a;
   --card: #ffffff;
+
+  --surface: #d7ffea;     /* vert menthe clair */
+  --surface-fg: #00331f;
 }
 
 /* ============================================================
-   Application des couleurs communes
+   BASE GÉNÉRALE — transitions premium
 ============================================================ */
+
+* {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
 
 body {
   background: var(--bg);
   color: var(--fg);
+  font-family: "Inter", sans-serif;
 }
 
+/* Cartes */
 .card {
   background: var(--card);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Liens */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  opacity: 0.8;
+}
+
+/* ============================================================
+   NAVIGATION — boutons premium
+============================================================ */
+
+.nav-btn {
+  background: var(--surface);
+  color: var(--surface-fg);
+  padding: 10px 18px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.nav-btn:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
 .nav-btn.active {
-  border-bottom: 2px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--accent);
+  transform: translateY(-2px);
 }
 
-a {
-  color: var(--accent);
+/* ============================================================
+   FORMULAIRES — champs premium HUD
+============================================================ */
+
+input,
+select,
+textarea {
+  background: var(--surface);
+  color: var(--surface-fg);
+  border: 1px solid var(--accent);
+  padding: 12px 14px;
+  border-radius: 14px;
+  width: 100%;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.07);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(var(--accent-rgb), 0.25),
+    0 0 10px var(--accent);
+  border-color: var(--accent);
+}
+
+/* Placeholder */
+input::placeholder,
+textarea::placeholder {
+  color: var(--surface-fg);
+  opacity: 0.6;
+}
+
+/* Boutons internes, validation, etc. */
+button.btn {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+button.btn:hover {
+  opacity: 0.9;
 }
