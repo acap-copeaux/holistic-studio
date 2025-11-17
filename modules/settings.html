@@ -1,20 +1,28 @@
 <section class="hs-section">
+
   <div class="card hs-settings-card">
-    <h2>Paramètres</h2>
+
+    <h2 style="margin-bottom: 1.2rem;">Paramètres</h2>
+
+    <p style="opacity: .8; margin-bottom: 1.6rem;">
+      Personnalise l’apparence et les animations de l’interface Holistic Studio.
+    </p>
 
     <div class="hs-settings-grid">
-      <!-- Thème visuel -->
+
+      <!-- =====================================================
+           CHOIX DU THEME
+      ====================================================== -->
       <div class="hs-setting-block">
         <h3>Thème visuel</h3>
-        <p class="hs-setting-help">
-          Choisis le style global de l’interface (couleurs, ambiance).
-        </p>
+        <p class="hs-setting-help">Apparence générale, couleurs et ambiance.</p>
+
         <div class="hs-field">
-          <label for="hs-theme-select">Thème</label>
+          <label for="hs-theme-select">Sélection du thème</label>
           <select id="hs-theme-select">
-            <option value="dark-1">Sombre Bleu (Armor Vision)</option>
-            <option value="dark-2">Sombre Orange (X-Vision)</option>
-            <option value="dark-3">Sombre Vert (SHIELD)</option>
+            <option value="dark-1">Sombre Bleu – Armor Vision</option>
+            <option value="dark-2">Sombre Orange – X-Vision</option>
+            <option value="dark-3">Sombre Vert – SHIELD</option>
             <option value="light-1">Clair Bleu</option>
             <option value="light-2">Clair Orange</option>
             <option value="light-3">Clair Vert</option>
@@ -22,54 +30,66 @@
         </div>
       </div>
 
-      <!-- Animations -->
+
+      <!-- =====================================================
+           CHOIX DES ANIMATIONS
+      ====================================================== -->
       <div class="hs-setting-block">
         <h3>Animations</h3>
         <p class="hs-setting-help">
-          Contrôle l’intensité des effets Armor Vision (glow, scanner, pulses).
+          Intensité des effets visuels (glow, pulse, scanner vertical).
         </p>
+
         <div class="hs-field">
           <label for="hs-anim-select">Niveau d’animations</label>
           <select id="hs-anim-select">
             <option value="off">Désactivées</option>
             <option value="low">Légères</option>
-            <option value="medium">Standard Armor Vision</option>
-            <option value="full">Mode Jarvis complet</option>
+            <option value="full">Complet – Armor Vision</option>
           </select>
         </div>
       </div>
+
     </div>
 
     <div class="hs-settings-footer">
-      <p>
-        Les choix sont mémorisés sur cet appareil.  
-        Tu peux fermer ou recharger la page : Holistic Studio se rouvrira avec les mêmes paramètres.
-      </p>
+      Les réglages sont enregistrés automatiquement et appliqués à chaque ouverture.
     </div>
+
   </div>
+
 </section>
 
 <script>
 (function () {
-  const themeSelect = document.getElementById("hs-theme-select");
-  const animSelect  = document.getElementById("hs-anim-select");
 
-  const savedTheme = localStorage.getItem("holistic-theme") || "dark-2";
-  const savedAnim  = localStorage.getItem("hs-anim") || "medium";
+  /* ============================
+     THEME
+  ============================ */
 
+  const themeSelect = document.querySelector("#hs-theme-select");
+  const savedTheme = window.hsGetTheme ? window.hsGetTheme() : "dark-2";
   themeSelect.value = savedTheme;
-  animSelect.value  = savedAnim;
 
   themeSelect.addEventListener("change", () => {
     const v = themeSelect.value;
-    localStorage.setItem("holistic-theme", v);
     if (window.hsSetTheme) window.hsSetTheme(v);
   });
 
+
+  /* ============================
+     ANIMATIONS
+  ============================ */
+
+  const animSelect = document.querySelector("#hs-anim-select");
+  const savedAnim = window.hsGetAnimations ? window.hsGetAnimations() : "off";
+  animSelect.value = savedAnim;
+
   animSelect.addEventListener("change", () => {
     const v = animSelect.value;
-    localStorage.setItem("hs-anim", v);
-    if (window.hsSetAnim) window.hsSetAnim(v);
+    if (window.hsSetAnimations) window.hsSetAnimations(v);
   });
+
 })();
-</script>
+    </script>
+    
