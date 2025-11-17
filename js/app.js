@@ -10,52 +10,38 @@ const HS_APP_CONFIG = {
   defaultModule: "analysis"
 };
 
-/* ---------- Thème clair / sombre ---------- */
-/* ===========================
-   GESTION DES THÈMES (fix complet)
-   =========================== */
+/* ===========================================
+   THÈME CLAIR / SOMBRE — Version stable
+=========================================== */
+function hsInitTheme() {
+    const toggle = document.querySelector("#theme-toggle");
+    if (!toggle) return;
 
-function initTheme() {
-    const toggle = q("#theme-toggle");
-    if (!toggle) {
-        console.warn("Bouton #theme-toggle introuvable.");
-        return;
-    }
-
-    // Si aucun thème n'est stocké → sombre par défaut
+    // Thème par défaut : sombre
     let current = localStorage.getItem("holistic-theme") || "dark";
 
-    applyTheme(current);
-    updateToggleLabel(current);
+    hsApplyTheme(current);
 
     toggle.addEventListener("click", () => {
-        current = (current === "light") ? "dark" : "light";
+        current = current === "dark" ? "light" : "dark";
         localStorage.setItem("holistic-theme", current);
-
-        applyTheme(current);
-        updateToggleLabel(current);
+        hsApplyTheme(current);
     });
 }
 
-function applyTheme(theme) {
-    // Active/désactive les feuilles CSS
-    const darkCSS = document.getElementById("theme-dark");
-    const lightCSS = document.getElementById("theme-light");
+function hsApplyTheme(mode) {
+    const dark = document.querySelector("#theme-dark");
+    const light = document.querySelector("#theme-light");
 
-    if (theme === "light") {
-        lightCSS.disabled = false;
-        darkCSS.disabled = true;
+    if (mode === "dark") {
+        dark.disabled = false;
+        light.disabled = true;
+        document.body.dataset.theme = "dark";
     } else {
-        lightCSS.disabled = true;
-        darkCSS.disabled = false;
+        dark.disabled = true;
+        light.disabled = false;
+        document.body.dataset.theme = "light";
     }
-}
-
-function updateToggleLabel(theme) {
-    const toggle = q("#theme-toggle");
-    if (!toggle) return;
-
-    toggle.textContent = (theme === "light") ? "Mode sombre" : "Mode clair";
 }
 
 /* ---------- Chargement HTML d’un module ---------- */
