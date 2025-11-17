@@ -5,53 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Holistic Studio – Armor Vision</title>
 
-  <!-- STYLES PRINCIPAUX -->
+  <!-- CSS -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/theme.css">
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0b0f16">
+  <meta name="theme-color" content="#000000">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+
 </head>
 
-<body data-theme="dark-2" data-anim="medium">
+<body>
 
-  <!-- INTRO / LOADER D'OUVERTURE -->
+  <!-- ============================
+       INTRO (affichée à chaque ouverture)
+  ============================ -->
   <div id="hs-intro-overlay">
-    <div class="intro-center">
-      <div class="intro-logo-wrap logo-glow anim-soft">
-        <img src="img/bear-totem.png" alt="Holistic Studio Totem">
-      </div>
-      <div class="intro-loader hud-loader anim-soft">
-        <div class="hud-ring"></div>
-        <div class="hud-dot"></div>
-      </div>
-      <div class="intro-text">HOLISTIC STUDIO</div>
+    <div class="intro-logo-wrapper">
+      <img src="img/bear-totem.png" class="intro-logo" alt="Holistic Totem">
     </div>
+
+    <div class="intro-glow"></div>
+    <div class="intro-text">HOLISTIC STUDIO</div>
   </div>
 
   <!-- BACKDROP SIDEBAR -->
   <div id="hs-sidebar-backdrop"></div>
 
-  <!-- HEADER -->
+  <!-- ============================
+       HEADER
+  ============================ -->
   <header id="hs-header">
+
+    <!-- Bouton menu -->
     <button id="hs-menu-toggle" class="menu-btn">☰</button>
 
-    <div class="logo-container logo-glow anim-soft">
-      <img id="hs-logo" src="img/bear-totem.png" alt="Holistic Logo">
-      <span class="logo-title">HOLISTIC STUDIO</span>
+    <!-- Logo -->
+    <div class="logo-container">
+      <img id="hs-logo" src="img/bear-totem.png" alt="Holistic Studio">
     </div>
 
+    <!-- Boutons à droite -->
     <div class="header-right">
-      <button data-module="settings" class="nav-btn nav-icon" aria-label="Paramètres">⚙️</button>
-      <button id="theme-toggle" class="theme-btn" aria-label="Basculer clair / sombre">🌗</button>
+      <button data-module="settings" class="nav-btn nav-icon">⚙️</button>
+      <button id="theme-toggle" class="theme-btn">🌗</button>
     </div>
+
   </header>
 
-  <!-- SIDEBAR (NAV LATERAL) -->
+  <!-- ============================
+       SIDEBAR LATÉRAL (mobile)
+  ============================ -->
   <aside id="hs-sidebar">
     <h2>Navigation</h2>
+
     <button data-module="analysis" class="nav-btn">Analyse</button>
     <button data-module="runes" class="nav-btn">Runes</button>
     <button data-module="premium" class="nav-btn">Premium</button>
@@ -65,7 +73,9 @@
     <button data-module="settings" class="nav-btn">Paramètres</button>
   </aside>
 
-  <!-- NAV TOP (DESKTOP) -->
+  <!-- ============================
+       NAVIGATION TOP (desktop)
+  ============================ -->
   <nav id="hs-nav">
     <button data-module="analysis" class="nav-btn">Analyse</button>
     <button data-module="runes" class="nav-btn">Runes</button>
@@ -77,19 +87,16 @@
     <button data-module="pricing" class="nav-btn">Tarifs</button>
     <button data-module="contact" class="nav-btn">Contact</button>
     <button data-module="legal" class="nav-btn">Légal</button>
-    <!-- plus de bouton settings ici -->
+    <!-- SUPPRIMÉ : doublon settings -->
   </nav>
 
-  <!-- CONTENU -->
+  <!-- ============================
+       MAIN
+  ============================ -->
   <main id="hs-main">
 
-    <!-- Overlay scanner (Armor Vision) -->
-    <div id="hs-scan-overlay">
-      <div class="scan-bar anim-soft"></div>
-    </div>
-
-    <!-- Loader modules -->
-    <div id="hs-loader" class="hud-loader anim-soft">
+    <!-- Loader dynamique (couleur liée au thème) -->
+    <div id="hs-loader" class="hud-loader">
       <div class="hud-ring"></div>
       <div class="hud-dot"></div>
     </div>
@@ -99,11 +106,13 @@
 
   </main>
 
-  <!-- SCRIPTS -->
+  <!-- ============================
+       SCRIPTS
+  ============================ -->
   <script src="js/utils.js"></script>
   <script src="js/premium.js"></script>
   <script src="js/runes.js"></script>
-  <!-- autres modules JS si besoin : yijing.js, mtc.js, etc. -->
   <script src="js/app.js"></script>
+
 </body>
 </html>
