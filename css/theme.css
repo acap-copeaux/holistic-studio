@@ -83,10 +83,15 @@ body[data-theme="light-3"] {
 }
 
 /* ============================================================
-   BASE GÉNÉRALE — transitions premium
+   BASE GÉNÉRALE — transitions premium + switch thème
 ============================================================ */
 
-* {
+body,
+.nav-btn,
+input,
+textarea,
+select,
+.card {
   transition: background-color 0.35s ease,
               color 0.35s ease,
               border-color 0.35s ease,
@@ -97,7 +102,22 @@ body[data-theme="light-3"] {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+}
+
+/* Petit fondu lors du changement de thème */
+body.theme-switching {
+  animation: theme-fade 0.35s ease-out;
+}
+
+@keyframes theme-fade {
+  from {
+    filter: brightness(0.9) saturate(0.9);
+  }
+  to {
+    filter: brightness(1) saturate(1);
+  }
 }
 
 /* Cartes */
@@ -106,10 +126,40 @@ body {
   border-radius: 18px;
   padding: 20px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  position: relative;
 }
+
 .card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+}
+
+/* Scan HUD léger sur les cartes au survol */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 40%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.12) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.card:hover::before {
+  opacity: 1;
+  animation: card-scan 1.2s linear;
+}
+
+@keyframes card-scan {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(260%); }
 }
 
 /* Liens */
@@ -131,6 +181,7 @@ a:hover { opacity: 0.8; }
   border: 1px solid transparent;
   font-weight: 600;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  cursor: pointer;
 }
 
 .nav-btn:hover {
@@ -198,7 +249,7 @@ textarea:focus {
   transform: translateY(-1px);
 }
 
-/* Boutons internes */
+/* Boutons internes génériques */
 button.btn {
   background: var(--accent);
   color: #fff;
@@ -208,6 +259,7 @@ button.btn {
   font-weight: 600;
   margin-top: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
 }
 
 button.btn:hover { opacity: 0.9; }
@@ -255,4 +307,60 @@ button.btn:hover { opacity: 0.9; }
 @keyframes hud-pulse {
   0%,100% { transform: translate(-50%,-50%) scale(0.9); opacity: 0.7; }
   50%     { transform: translate(-50%,-50%) scale(1.25); opacity: 1; }
+}
+
+/* ============================================================
+   ANIMATION D'INTRO ARMOR VISION
+============================================================ */
+
+#hs-intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.9) 0, rgba(0,0,0,1) 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 9999;
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+#hs-intro-overlay.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-ring {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 26px var(--accent);
+  animation: intro-spin 1.4s linear infinite;
+  position: relative;
+}
+
+.intro-core {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 22px var(--accent);
+}
+
+.intro-text {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg);
+  opacity: 0.85;
+}
+
+@keyframes intro-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
