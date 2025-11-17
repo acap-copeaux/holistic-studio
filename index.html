@@ -41,10 +41,28 @@
     <div class="intro-text">Holistic Studio</div>
   </div>
 
+  <body data-theme="dark">
+
+  <!-- INTRO ARMOR VISION (inchangé) -->
+  <div id="hs-intro-overlay">
+    <div class="intro-ring">
+      <div class="intro-core"></div>
+    </div>
+    <div class="intro-text">Holistic Studio</div>
+  </div>
+
+  <!-- BACKDROP POUR LE MENU LATÉRAL -->
+  <div id="hs-sidebar-backdrop"></div>
+
   <!-- ============================================
        HEADER
   ============================================ -->
   <header id="hs-header">
+      <!-- Bouton menu latéral (hamburger) -->
+      <button id="hs-menu-toggle" class="menu-btn" aria-label="Menu" onclick="hsToggleSidebar()">
+        ☰
+      </button>
+
       <h1 class="logo">Holistic Studio</h1>
 
       <div style="display:flex; gap:10px; align-items:center;">
@@ -57,7 +75,7 @@
         <button id="theme-toggle" class="theme-btn" onclick="hsToggleDarkLight()">🌗</button>
       </div>
   </header>
-
+    
   <!-- ============================================
        NAVIGATION
   ============================================ -->
