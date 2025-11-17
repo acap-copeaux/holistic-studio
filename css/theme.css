@@ -1,27 +1,86 @@
-/* =============================
-   THEME SOMBRE PAR DEFAUT
-============================= */
-body[data-theme="dark"] {
-    --bg: #0a0a0a;
-    --fg: #e5e5e5;
-    --accent: #56c6ff;
+/* ============================================================
+   THEMES HOLISTIC STUDIO — un seul fichier
+   3 thèmes sombres + 3 thèmes clairs
+   S'appliquent via body[data-theme="xxx"]
+============================================================ */
+
+/* ============================================================
+   THEME SOMBRE 1 — Armor Vision Bleu
+============================================================ */
+body[data-theme="dark-1"] {
+  --bg: #0b0f16;
+  --fg: #d9e6ff;
+  --accent: #4aa8ff;
+  --card: #111822;
 }
 
-/* =============================
-   THEME CLAIR
-============================= */
-body[data-theme="light"] {
-    --bg: #ffffff;
-    --fg: #222222;
-    --accent: #0077aa;
+/* ============================================================
+   THEME SOMBRE 2 — X-Vision Orange
+============================================================ */
+body[data-theme="dark-2"] {
+  --bg: #0e0a07;
+  --fg: #ffe8d9;
+  --accent: #ff7f28;
+  --card: #1a120d;
 }
 
-/* Application des variables */
+/* ============================================================
+   THEME SOMBRE 3 — SHIELD Vert
+============================================================ */
+body[data-theme="dark-3"] {
+  --bg: #05100a;
+  --fg: #d4ffe8;
+  --accent: #2eff95;
+  --card: #0c1a12;
+}
+
+/* ============================================================
+   THEME CLAIR 1 — Armor Vision Clair
+============================================================ */
+body[data-theme="light-1"] {
+  --bg: #f2f8ff;
+  --fg: #1b2e40;
+  --accent: #0069ce;
+  --card: #ffffff;
+}
+
+/* ============================================================
+   THEME CLAIR 2 — X-Vision Clair
+============================================================ */
+body[data-theme="light-2"] {
+  --bg: #fff5e9;
+  --fg: #412e1d;
+  --accent: #e06d00;
+  --card: #ffffff;
+}
+
+/* ============================================================
+   THEME CLAIR 3 — SHIELD Clair
+============================================================ */
+body[data-theme="light-3"] {
+  --bg: #eafff3;
+  --fg: #003d26;
+  --accent: #00c86a;
+  --card: #ffffff;
+}
+
+/* ============================================================
+   Application des couleurs communes
+============================================================ */
+
 body {
-    background: var(--bg);
-    color: var(--fg);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.card {
+  background: var(--card);
 }
 
 .nav-btn.active {
-    border-bottom: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+
+a {
+  color: var(--accent);
 }
