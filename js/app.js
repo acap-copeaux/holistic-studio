@@ -1,5 +1,5 @@
 /* ============================================================
-   app.js — Kernel Holistic Studio
+   Holistic Studio — core JS
 ============================================================ */
 
 const HS_APP_CONFIG = {
@@ -43,10 +43,11 @@ function hsInitIntro() {
 }
 
 /* ============================================================
-   CHARGEMENT HTML D’UN MODULE
+   MODULE LOADING
 ============================================================ */
 async function hsLoadModuleHTML(moduleName) {
   const path = `${HS_APP_CONFIG.modulesPath}${moduleName}.html?_=${Date.now()}`;
+
   try {
     const res = await fetch(path);
     if (!res.ok) throw new Error("HTTP " + res.status);
@@ -56,17 +57,11 @@ async function hsLoadModuleHTML(moduleName) {
   }
 }
 
-/* ============================================================
-   MODULE INIT
-============================================================ */
 function hsCallModuleInit(moduleName, container) {
   const fn = window[`HS_${moduleName}_init`];
   if (typeof fn === "function") fn(container);
 }
 
-/* ============================================================
-   CHARGEMENT MODULE COMPLET
-============================================================ */
 async function hsLoadModule(moduleName) {
   const container = document.querySelector("#module-container");
   const loader = document.getElementById("hs-loader");
@@ -84,7 +79,7 @@ async function hsLoadModule(moduleName) {
 }
 
 /* ============================================================
-   NAVIGATION
+   NAV
 ============================================================ */
 function hsInitNavigation() {
   const buttons = document.querySelectorAll("[data-module]");
